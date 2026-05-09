@@ -1,0 +1,20 @@
+# Dossiers de compilation (Générés par CMake)
+build/
+bin/*.exe
+obj/
+
+# Fichiers de configuration IDE
+.vscode/
+.idea/
+*.swp
+*.user
+
+# Fichiers système Windows
+Thumbs.db
+desktop.ini
+
+# Bibliothèques externes (si compilées localement)
+*.o
+*.a
+*.lib
+*.dll

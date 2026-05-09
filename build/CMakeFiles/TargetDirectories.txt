@@ -1,3 +1,0 @@
-C:/Users/G'mas/OneDrive/Documents/IntelliEditor/build/CMakeFiles/IntelliEditor.dir
-C:/Users/G'mas/OneDrive/Documents/IntelliEditor/build/CMakeFiles/edit_cache.dir
-C:/Users/G'mas/OneDrive/Documents/IntelliEditor/build/CMakeFiles/rebuild_cache.dir
