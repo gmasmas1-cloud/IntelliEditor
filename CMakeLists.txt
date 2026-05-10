@@ -7,12 +7,16 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Définition des dossiers
 include_directories(include)
+include_directories(lib)
+
 
 # Recherche des fichiers sources dans /src [cite: 13]
-file(GLOB SOURCES "src/*.c")
+#file(GLOB SOURCES "src/*.c")
 
 # Création de l'exécutable dans le dossier /bin [cite: 13]
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-add_executable(IntelliEditor ${SOURCES})
+#add_executable(IntelliEditor ${SOURCES})
 
 # Note : Les bibliothèques (Hunspell, Scintilla, cJSON) seront liées ici en Phase 2 [cite: 345, 346]
+add_executable(test_cjson src/test_cjson.c lib/cJSON.c)
+target_include_directories(test_cjson PRIVATE lib)
