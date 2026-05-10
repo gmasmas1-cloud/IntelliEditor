@@ -1,18 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
 project(IntelliEditor)
 
-# Standard C11 requis pour le projet [cite: 42]
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Définition des dossiers
 include_directories(include)
+include_directories(llama.cpp/include)
 
-# Recherche des fichiers sources dans /src [cite: 13]
-file(GLOB SOURCES "src/*.c")
+add_subdirectory(llama.cpp)
 
-# Création de l'exécutable dans le dossier /bin [cite: 13]
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-add_executable(IntelliEditor ${SOURCES})
 
-# Note : Les bibliothèques (Hunspell, Scintilla, cJSON) seront liées ici en Phase 2 [cite: 345, 346]
+# Programme principal (DEV-A)
+add_executable(IntelliEditor src/main.c)
+target_link_libraries(IntelliEditor llama)
+
+# Test DEV-C : module LLM
+add_executable(test_llm
+    src/llm/test_llm.c
+    src/llm/llm_interface.c
+)
+target_link_libraries(test_llm llama)
