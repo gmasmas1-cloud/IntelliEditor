@@ -21,3 +21,10 @@ add_executable(test_llm
     src/llm/llm_interface.c
 )
 target_link_libraries(test_llm llama)
+
+# Test DEV-C : Hunspell
+add_executable(test_hunspell
+    src/nlp/test_hunspell.c
+    src/nlp/hunspell_wrap.c
+)
+target_link_libraries(test_hunspell hunspell-1.7)
