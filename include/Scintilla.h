@@ -166,22 +166,14 @@ struct Sci_Rectangle {
 #undef Sci_NotifyHeader
 #define SCINTILLA_HAD_SCI_NOTIFYHEADER
 #endif
-struct Sci_NotifyHeader {
+struct Sci_NotifyHeader_tag {
 	void *hwndFrom;
 	uptr_t idFrom;
 	unsigned int code;
 };
-#ifdef SCINTILLA_HAD_SCI_NOTIFYHEADER
-#undef Sci_NotifyHeader
-#define Sci_NotifyHeader NMHDR
-#undef SCINTILLA_HAD_SCI_NOTIFYHEADER
-#else
-#ifndef Sci_NotifyHeader
-#define Sci_NotifyHeader NMHDR
-#endif
-#endif
+typedef struct Sci_NotifyHeader_tag Sci_NotifyHeader;
 struct SCNotification {
-	Sci_NotifyHeader nmhdr;
+	struct Sci_NotifyHeader_tag nmhdr;
 	Sci_Position position;
 	int ch;
 	int modifiers;
