@@ -28,3 +28,11 @@ add_executable(test_hunspell
     src/nlp/hunspell_wrap.c
 )
 target_link_libraries(test_hunspell hunspell-1.7)
+
+# Test DEV-C : Thread LLM
+add_executable(test_thread
+    src/llm/test_thread.c
+    src/llm/llm_thread.c
+    src/llm/llm_interface.c
+)
+target_link_libraries(test_thread llama pthread)
