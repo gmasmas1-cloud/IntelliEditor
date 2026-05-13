@@ -1,0 +1,33 @@
+{
+    "meta": {
+        "document_type": "Mémoire de Licence",
+        "version": "1.0",
+        "author": "UDBL"
+    },
+    "rules": [
+        {
+        "id": "R001",
+        "category": "structure",
+        "severity": "error",
+        "description": "Le document doit contenir une section Introduction",
+        "check_type": "section_exists",
+        "parameter": "Introduction"
+        },
+        {
+        "id": "R002",
+        "category": "style",
+        "severity": "warning",
+        "description": "Éviter la première personne du singulier",
+        "check_type": "regex_forbidden",
+        "parameter": "\\bje\\b|\\bj'|\\bme\\b|\\bmon\\b"
+        },
+        {
+        "id": "R003",
+        "category": "longueur",
+        "severity": "warning",
+        "description": "L'introduction doit contenir au moins 300 mots",
+        "check_type": "word_count_min",
+        "parameter": "Introduction"
+        }
+    ]
+}
