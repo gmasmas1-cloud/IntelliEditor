@@ -2,7 +2,7 @@
 Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
+of this software and associated documentation files (the "Software"), to dealje suis le dev-d, on est au premier jour et je viens d'accepter l'invitation de collaborateur au projet du dev-a et ensuite je fais quoi ? voici la structure des dossiers... je commence par quoi et juste une précision, je suis débutant avec le langage c, je n'y connais rien a ce langage, donc va avec moi pour la partie code qu'avec les bases du langage c
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is

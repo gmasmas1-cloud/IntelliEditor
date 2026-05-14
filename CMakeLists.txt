@@ -18,5 +18,10 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #add_executable(IntelliEditor ${SOURCES})
 
 # Note : Les bibliothèques (Hunspell, Scintilla, cJSON) seront liées ici en Phase 2 [cite: 345, 346]
-add_executable(test_cjson src/test_cjson.c lib/cJSON.c)
-target_include_directories(test_cjson PRIVATE lib)
+add_executable(test_cjson
+    src/test_cjson.c
+    lib/cJSON.c       # Fichier source de cJSON
+)
+
+# Indique où trouver cJSON.h
+target_include_directories(test_cjson PRIVATE ${CMAKE_SOURCE_DIR}/lib)
