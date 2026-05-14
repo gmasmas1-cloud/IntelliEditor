@@ -36,3 +36,19 @@ add_executable(test_thread
     src/llm/llm_interface.c
 )
 target_link_libraries(test_thread llama pthread)
+
+# Test DEV-C : NLP complet
+add_executable(test_nlp
+    src/nlp/test_nlp.c
+    src/nlp/nlp_engine.c
+    src/nlp/hunspell_wrap.c
+    src/nlp/tokenizer.c
+)
+target_link_libraries(test_nlp hunspell-1.7)
+
+add_executable(test_debug
+    src/nlp/test_debug.c
+    src/nlp/tokenizer.c
+    src/nlp/hunspell_wrap.c
+)
+target_link_libraries(test_debug hunspell-1.7)
