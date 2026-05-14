@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../llama.cpp/include/llama.h"
+#include <string.h>
 
 /*
  * LLMEngine est notre "boîte" qui contient tout ce dont
@@ -85,4 +86,117 @@ void llm_free(struct LLMEngine* engine) {
     llama_backend_free();           /* arrête llama.cpp    */
     free(engine);                   /* libère notre struct */
     printf("[LLM] Moteur arrêté proprement.\n");
+}
+
+
+
+/*
+ * llm_ask() — envoie un prompt au modèle et retourne la réponse.
+ *
+ * Paramètres :
+ *   engine : le moteur initialisé par llm_init()
+ *   prompt : la question en texte (ex: "Corrige cette phrase...")
+ *
+ * Retourne : la réponse en texte, allouée dynamiquement.
+ *            L'appelant doit libérer avec free().
+ *            Retourne NULL si erreur.
+ */
+char* llm_ask(struct LLMEngine* engine, const char* prompt) {
+    if (!engine || !prompt) return NULL;
+
+    /* --- ÉTAPE 1 : TOKENISER LE PROMPT --- */
+    /* On demande combien de tokens maximum le contexte peut tenir */
+    int n_ctx_max = llama_n_ctx(engine->ctx);
+
+    /* On alloue un tableau pour stocker les tokens */
+    llama_token* tokens = malloc(sizeof(llama_token) * n_ctx_max);
+    if (!tokens) return NULL;
+
+    /* On récupère le vocabulaire du modèle */
+    const struct llama_vocab* vocab = llama_model_get_vocab(engine->model);
+
+    /* On convertit le texte en tokens
+     * llama_tokenize retourne le nombre de tokens produits */
+    int n_tokens = llama_tokenize(vocab, prompt, strlen(prompt),
+                                  tokens, n_ctx_max, true, false);
+    if (n_tokens < 0) {
+        fprintf(stderr, "[LLM] Erreur tokenisation\n");
+        free(tokens);
+        return NULL;
+    }
+
+    /* --- ÉTAPE 2 : ENVOYER LES TOKENS AU MODÈLE --- */
+    /* Un "batch" c'est un paquet de tokens à traiter en une fois */
+    struct llama_batch batch = llama_batch_get_one(tokens, n_tokens);
+
+    if (llama_decode(engine->ctx, batch) != 0) {
+        fprintf(stderr, "[LLM] Erreur decode\n");
+        free(tokens);
+        return NULL;
+    }
+
+    /* --- ÉTAPE 3 : GÉNÉRER LA RÉPONSE TOKEN PAR TOKEN --- */
+    /* On prépare un buffer pour la réponse */
+    size_t buf_size = 4096;
+    char*  response = malloc(buf_size);
+    if (!response) { free(tokens); return NULL; }
+    response[0] = '\0';
+    size_t pos = 0;
+
+    /* Le sampler choisit le prochain token à chaque étape
+     * "greedy" = toujours choisir le token le plus probable */
+    struct llama_sampler* sampler = llama_sampler_chain_init(
+        llama_sampler_chain_default_params()
+    );
+    llama_sampler_chain_add(sampler, llama_sampler_init_greedy());
+
+    /* On génère jusqu'à 512 tokens maximum */
+    for (int i = 0; i < 512; i++) {
+
+        /* Choisir le prochain token */
+        llama_token token_id = llama_sampler_sample(
+                                   sampler, engine->ctx, -1);
+
+        /* Si c'est un token de fin → le modèle a fini de répondre */
+        if (llama_vocab_is_eog(vocab, token_id)) break;
+
+        /* Convertir le token en texte */
+        char piece[32];
+        int n = llama_token_to_piece(vocab, token_id,
+                                     piece, sizeof(piece), 0, false);
+
+        if (n > 0) {
+            /* Agrandir le buffer si nécessaire */
+            if (pos + n + 1 >= buf_size) {
+                buf_size *= 2;
+                char* tmp = realloc(response, buf_size);
+                if (!tmp) break;
+                response = tmp;
+            }
+            /* Ajouter le morceau de texte à la réponse */
+            memcpy(response + pos, piece, n);
+            pos += n;
+            response[pos] = '\0';
+        }
+
+        /* Envoyer ce token au modèle pour qu'il prépare le suivant */
+        struct llama_batch next = llama_batch_get_one(&token_id, 1);
+        if (llama_decode(engine->ctx, next) != 0) break;
+    }
+
+    llama_sampler_free(sampler);
+    free(tokens);
+    return response;
+}
+
+/* Nettoie la réponse du LLM : supprime le token <|im_end|> */
+void llm_nettoyer_reponse(char* response) {
+    if (!response) return;
+    char* fin = strstr(response, "<|im_end|>");
+    if (fin) *fin = '\0';
+    /* Supprimer les espaces en fin */
+    int len = strlen(response);
+    while (len > 0 && (response[len-1] == ' ' ||
+                        response[len-1] == '\n'))
+        response[--len] = '\0';
 }

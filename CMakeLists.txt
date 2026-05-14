@@ -10,3 +10,45 @@ include_directories(llama.cpp/include)
 add_subdirectory(llama.cpp)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
+# Programme principal (DEV-A)
+add_executable(IntelliEditor src/main.c)
+target_link_libraries(IntelliEditor llama)
+
+# Test DEV-C : module LLM
+add_executable(test_llm
+    src/llm/test_llm.c
+    src/llm/llm_interface.c
+)
+target_link_libraries(test_llm llama)
+
+# Test DEV-C : Hunspell
+add_executable(test_hunspell
+    src/nlp/test_hunspell.c
+    src/nlp/hunspell_wrap.c
+)
+target_link_libraries(test_hunspell hunspell-1.7)
+
+# Test DEV-C : Thread LLM
+add_executable(test_thread
+    src/llm/test_thread.c
+    src/llm/llm_thread.c
+    src/llm/llm_interface.c
+)
+target_link_libraries(test_thread llama pthread)
+
+# Test DEV-C : NLP complet
+add_executable(test_nlp
+    src/nlp/test_nlp.c
+    src/nlp/nlp_engine.c
+    src/nlp/hunspell_wrap.c
+    src/nlp/tokenizer.c
+)
+target_link_libraries(test_nlp hunspell-1.7)
+
+add_executable(test_debug
+    src/nlp/test_debug.c
+    src/nlp/tokenizer.c
+    src/nlp/hunspell_wrap.c
+)
+target_link_libraries(test_debug hunspell-1.7)
