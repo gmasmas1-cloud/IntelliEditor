@@ -14,11 +14,27 @@
         },
         {
         "id": "R002",
-        "category": "style",
+        "category": "structure",
+        "severity": "error",
+        "description": "Le document doit contenir une section Conclusion",
+        "check_type": "section_exists",
+        "parameter": "Conclusion"
+        },
+        {
+        "id": "R003",
+        "category": "longueur",
         "severity": "warning",
-        "description": "Eviter la premiere personne du singulier",
-        "check_type": "regex_forbidden",
-        "parameter": "\\bje\\b|\\bj'|\\bme\\b"
+        "description": "L'introduction doit contenir au moins 10 mots",
+        "check_type": "word_count_min",
+        "parameter": "10"
+        },
+        {
+        "id": "R004",
+        "category": "structure",
+        "severity": "error",
+        "description": "Les sections doivent être dans l'ordre Resumer -> Introduction -> Conclusion",
+        "check_type": "section_order",
+        "parameter": ["Resumer", "Introduction", "Conclusion"]
         }
     ]
 }

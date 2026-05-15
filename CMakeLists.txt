@@ -34,4 +34,26 @@ add_executable(test_rule_parser
 )
 
 # Chemins pour les includes
-target_include_directories(test_rule_parser PRIVATE ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(test_rule_parser PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+# Exécutable pour tester le moteur de règles
+add_executable(test_rule_checker
+    src/test_rule_checker.c
+    src/rules/rule_parser.c
+    src/rules/rule_checker.c
+    src/rules/rule_engine.c
+    lib/cJSON.c
+)
+
+# Chemins pour les includes
+target_include_directories(test_rule_checker PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src/rules
+)
+
+
+
