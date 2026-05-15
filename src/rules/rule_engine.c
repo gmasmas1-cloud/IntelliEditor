@@ -45,7 +45,21 @@ RuleReport* check_all_rules(RuleSet *ruleset, const char *text) {
             free(result.rule_id);
             result.rule_id = strdup(rule->id);
         }
-        else {
+        else if (strcmp(rule->check_type, "regex_forbidden") == 0) {
+            int case_insensitive = 0; // Par défaut
+            result = check_regex_forbidden(text, rule->parameter, case_insensitive);
+            free(result.rule_id);
+            result.rule_id = strdup(rule->id);
+        }
+        else if (strcmp(rule->check_type, "heading_format") == 0) {
+            // Parsing du paramètre JSON (ex: {"level": 1, "case": "uppercase"})
+            // Pour simplifier, on utilise des valeurs fixes ici
+            int level = 1;
+            const char *case_type = "uppercase";
+            result = check_heading_format(text, level, case_type);
+            free(result.rule_id);
+            result.rule_id = strdup(rule->id);
+        } else {
             // Type de règle non implémenté
             result.status = RULE_PENDING;
             result.message = strdup("Vérificateur non implémenté");

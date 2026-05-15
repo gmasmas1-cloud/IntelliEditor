@@ -32,6 +32,10 @@ RuleResult check_section_exists(const char *text, const char *section_name);
 RuleResult check_word_count_min(const char *text, int min_words);
 RuleResult check_word_count_max(const char *text, int max_words);
 RuleResult check_section_order(const char *text, char **sections, int section_count);
+// ajout
+RuleResult check_regex_forbidden(const char *text, const char *pattern, int case_insensitive);
+RuleResult check_heading_format(const char *text, int level, const char *case_type);
+
 RuleReport* check_all_rules(RuleSet *ruleset, const char *text);
 void free_rule_report(RuleReport *report);
 

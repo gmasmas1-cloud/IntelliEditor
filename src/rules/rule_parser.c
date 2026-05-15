@@ -1,9 +1,8 @@
-// src/rules/rule_parser.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "cJSON.h"
-#include "rule_parser.h"  // ✅ Chemin correct grâce à CMake
+#include "rule_parser.h"  // Chemin correct grâce à CMake
 
 char* read_file(const char *path) {
     FILE *file = fopen(path, "rb");

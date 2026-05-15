@@ -1,0 +1,34 @@
+{
+    "meta": {
+        "document_type": "Rapport",
+        "version": "1.0",
+        "author": "UDBL"
+    },
+    "rules": [
+        {
+        "id": "R101",
+        "category": "structure",
+        "severity": "error",
+        "description": "Le rapport doit contenir un Résumé",
+        "check_type": "section_exists",
+        "parameter": "Résumé"
+        },
+        {
+        "id": "R102",
+        "category": "longueur",
+        "severity": "error",
+        "description": "Le résumé ne doit pas dépasser 250 mots",
+        "check_type": "word_count_max",
+        "parameter": { "section": "Résumé", "max_words": 250 }
+        },
+        {
+        "id": "R103",
+        "category": "style",
+        "severity": "warning",
+        "description": "Éviter les anglicismes courants",
+        "check_type": "regex_forbidden",
+        "parameter": "\\bmail\\b|\\bemail\\b|\\bfeedback\\b",
+        "flags": "case_insensitive"
+        }
+    ]
+}

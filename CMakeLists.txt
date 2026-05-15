@@ -55,5 +55,17 @@ target_include_directories(test_rule_checker PRIVATE
     ${CMAKE_SOURCE_DIR}/src/rules
 )
 
+add_executable(test_demo
+    src/test_demo.c
+    src/rules/rule_parser.c
+    src/rules/rule_checker.c
+    src/rules/rule_engine.c
+    lib/cJSON.c
+)
 
+target_include_directories(test_demo PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src/rules
+)
 

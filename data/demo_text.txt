@@ -1,0 +1,7 @@
+# introduction  # Erreur : doit être en majuscules (H1)
+
+Voici mon mémoire. je vais parler de mon sujet.  # Erreur : "je" et "mon" interdits
+
+# Conclusion
+
+Ceci est la conclusion.
