@@ -1,0 +1,24 @@
+{
+    "meta": {
+        "document_type": "Memoire de Licence",
+        "version": "1.0"
+    },
+    "rules": [
+        {
+        "id": "R001",
+        "category": "structure",
+        "severity": "error",
+        "description": "Le document doit contenir une section Introduction",
+        "check_type": "section_exists",
+        "parameter": "Introduction"
+        },
+        {
+        "id": "R002",
+        "category": "style",
+        "severity": "warning",
+        "description": "Eviter la premiere personne du singulier",
+        "check_type": "regex_forbidden",
+        "parameter": "\\bje\\b|\\bj'|\\bme\\b"
+        }
+    ]
+}

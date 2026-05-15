@@ -25,3 +25,13 @@ add_executable(test_cjson
 
 # Indique où trouver cJSON.h
 target_include_directories(test_cjson PRIVATE ${CMAKE_SOURCE_DIR}/lib)
+
+# Exécutable pour tester le parseur de règles
+add_executable(test_rule_parser
+    src/test_rule_parser.c
+    src/rules/rule_parser.c
+    lib/cJSON.c
+)
+
+# Chemins pour les includes
+target_include_directories(test_rule_parser PRIVATE ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/include)

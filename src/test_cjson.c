@@ -1,10 +1,9 @@
-// src/test_cjson.c
 #include <stdio.h>   // Pour printf()
 #include "cJSON.h"   // Bibliothèque JSON
 
 int main() {
     // 1. Chaîne JSON de test (similaire aux règles du projet)
-    const char *json_test = "{\"id\": \"R001\", \"description\": \"Test de règle\"}";
+    const char *json_test = "{\"id\": \"R001\", \"description\": \"Test de regle\"}";
 
     // 2. Parser le JSON (convertir la chaîne en objet C)
     cJSON *rules = cJSON_Parse(json_test);
