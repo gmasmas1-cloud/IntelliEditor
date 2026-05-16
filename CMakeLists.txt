@@ -1,21 +1,62 @@
 cmake_minimum_required(VERSION 3.10)
 project(IntelliEditor)
 
-# Standard C11 requis pour le projet [cite: 42]
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Définition des dossiers
 include_directories(include)
+include_directories(llama.cpp/include)
 include_directories(lib)
 
 
+add_subdirectory(llama.cpp)
 # Recherche des fichiers sources dans /src [cite: 13]
 #file(GLOB SOURCES "src/*.c")
 
-# Création de l'exécutable dans le dossier /bin [cite: 13]
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
+# Programme principal (DEV-A)
+add_executable(IntelliEditor src/main.c)
+target_link_libraries(IntelliEditor llama)
 #add_executable(IntelliEditor ${SOURCES})
+
+# Test DEV-C : module LLM
+add_executable(test_llm
+    src/llm/test_llm.c
+    src/llm/llm_interface.c
+)
+target_link_libraries(test_llm llama)
+
+# Test DEV-C : Hunspell
+add_executable(test_hunspell
+    src/nlp/test_hunspell.c
+    src/nlp/hunspell_wrap.c
+)
+target_link_libraries(test_hunspell hunspell-1.7)
+
+# Test DEV-C : Thread LLM
+add_executable(test_thread
+    src/llm/test_thread.c
+    src/llm/llm_thread.c
+    src/llm/llm_interface.c
+)
+target_link_libraries(test_thread llama pthread)
+
+# Test DEV-C : NLP complet
+add_executable(test_nlp
+    src/nlp/test_nlp.c
+    src/nlp/nlp_engine.c
+    src/nlp/hunspell_wrap.c
+    src/nlp/tokenizer.c
+)
+target_link_libraries(test_nlp hunspell-1.7)
+
+add_executable(test_debug
+    src/nlp/test_debug.c
+    src/nlp/tokenizer.c
+    src/nlp/hunspell_wrap.c
+)
+target_link_libraries(test_debug hunspell-1.7)
 
 # Note : Les bibliothèques (Hunspell, Scintilla, cJSON) seront liées ici en Phase 2 [cite: 345, 346]
 add_executable(test_cjson
