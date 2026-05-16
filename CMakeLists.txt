@@ -8,6 +8,17 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 # Définition des dossiers
 include_directories(include)
 
+# Liste de TOUS les fichiers du groupe
+set(SOURCES
+    src/main.c
+    src/buffer.c        # Ton code
+    src/file_io.c       # Ton code
+    src/worker.c        # Ton code (Threads)
+    # src/interface.c   # Code de Mbayo
+    # src/ai_llm.c      # Code de David
+    # src/rules.c       # Code de Ndala
+)
+
 # Recherche des fichiers sources dans /src [cite: 13]
 file(GLOB SOURCES "src/*.c")
 
@@ -19,4 +30,4 @@ add_executable(IntelliEditor ${SOURCES})
 
 # Ajout du support des threads
 find_package(Threads REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
+target_link_libraries($IntelliEditor ${SOURCES} PRIVATE Threads::Threads)
