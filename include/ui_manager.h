@@ -1,11 +1,10 @@
 /**
  * @file ui_manager.h
  * @brief UI Manager - Module de gestion de l'interface utilisateur (DEV-B)
- * 
- * Ce module expose uniquement les fonctions publiques pour initialiser
- * et gérer l'éditeur Scintilla. Masangu (DEV-A) et David (DEV-C)
- * peuvent l'utiliser via ces interfaces publiques.
- * 
+ *
+ * Ce module expose les fonctions publiques pour initialiser et gérer
+ * l'éditeur Scintilla et tous les composants de l'interface.
+ *
  * Périmètre DEV-B : src/ui/
  */
 
@@ -14,104 +13,135 @@
 
 #include <windows.h>
 
+/* Redéfinition des constantes Scintilla nécessaires */
+#define SCI_GETLENGTH 2006
+#define SCI_GETTEXT 2182
+#define SCI_ADDTEXT 2001
+#define SCI_CLEARALL 2004
+#define SCI_SETZOOM 2373
+#define SCI_SETCARETLINEVISIBLE 2098
+#define SCI_SETCARETLINEBACK 2099
+#define SCI_STYLESETFONT 2056
+#define SCI_STYLESETSIZE 2055
+#define SCI_STYLECLEARALL 2050
+#define STYLE_DEFAULT 32
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/* ============================================================================
+ * IDs des commandes de menu et des composants
+ * ============================================================================ */
+#define IDM_NOUVEAU       1001
+#define IDM_OUVRIR        1002
+#define IDM_SAUVEGARDER   1003
+#define IDM_QUITTER       1004
+#define IDM_COUPER        1005
+#define IDM_COPIER        1006
+#define IDM_COLLER        1007
+
+/* IDs des boutons de la barre d'outils */
+#define IDB_TOOLBAR_CORRIGER 3001
+#define IDB_TOOLBAR_REF      3002
+#define IDB_STYLE_GRAS       3003
+#define IDB_STYLE_ITALIQUE   3004
+#define IDB_STYLE_SOULIGNE   3005
+
+/* IDs des contrôles enfants */
+#define ID_TOOLBAR        200
+#define ID_STATUSBAR      300
+#define ID_RULES_PANEL    400
+#define ID_EDITOR         100
+
+/* ============================================================================
+ * Initialisation et gestion de l'éditeur Scintilla
+ * ============================================================================ */
+
 /**
- * @brief Initialise l'éditeur Scintilla dans une fenêtre parente
- * 
- * @param hwndParent Handle de la fenêtre parente (fournie par DEV-A)
- * @return HWND Handle de la fenêtre Scintilla créée, ou NULL en cas d'erreur
- * 
- * Utilisation recommandée :
- *   - Appelée depuis main() après la création de la fenêtre principale
- *   - Charge automatiquement Scintilla.dll
- *   - Crée la fenêtre enfant avec les styles appropriés
+ * @brief Initialise l'éditeur Scintilla dans une fenêtre parente.
+ * @param hwndParent Handle de la fenêtre parente
+ * @return HWND Handle de la fenêtre Scintilla, ou NULL en cas d'erreur
  */
 HWND UI_InitEditor(HWND hwndParent);
 
 /**
- * @brief Redimensionne la fenêtre de l'éditeur
- * 
- * @param width Nouvelle largeur en pixels
- * @param height Nouvelle hauteur en pixels
- * 
- * Utilisation recommandée :
- *   - Appelée lors de WM_SIZE dans la fenêtre principale
- *   - Maintient l'éditeur en synchronisation avec la taille de la fenêtre
- */
-void UI_ResizeEditor(int width, int height);
-
-/**
- * @brief Obtient le handle de la fenêtre Scintilla
- * 
- * @return HWND Handle de l'éditeur (peut être NULL si non initialisé)
- * 
- * Utilisation recommandée :
- *   - DEV-C peut l'utiliser pour envoyer du texte NLP à l'éditeur
- *   - Permet de communiquer avec Scintilla via SendMessage()
+ * @brief Retourne le handle de la fenêtre Scintilla.
  */
 HWND UI_GetEditorHandle(void);
 
 /**
- * @brief Ajoute du texte à l'éditeur
- * 
- * @param text Texte à ajouter (terminé par \0)
- * @return int Nombre de caractères ajoutés
- * 
- * Utilisation recommandée :
- *   - DEV-C appelle cette fonction pour afficher les résultats NLP
- *   - Thread-safe grâce à l'encapsulation
+ * @brief Ajoute du texte à la fin de l'éditeur.
+ * @param text Texte à ajouter (terminé par \\0)
+ * @return Nombre de caractères ajoutés
  */
 int UI_AppendText(const char *text);
 
 /**
- * @brief Nettoie et détruit la fenêtre de l'éditeur
- * 
- * Utilisation recommandée :
- *   - Appelée lors de la fermeture de l'application (WM_DESTROY)
- *   - Libère les ressources Scintilla
+ * @brief Nettoie et détruit les ressources de l'éditeur.
  */
 void UI_DestroyEditor(void);
 
-
 /* ============================================================================
- * UTILITAIRES POUR DEV-A (Masangu) - Intégration avec la fenêtre principale
+ * Initialisation des composants de l'interface
  * ============================================================================ */
 
 /**
- * @brief Obtient la procédure fenêtre pour la fenêtre principale
- * 
- * @return WNDPROC Pointeur vers la procédure fenêtre UI_WndProc
- * 
- * Utilisation recommandée (dans main.c de DEV-A):
- *   WNDCLASSA wc = {0};
- *   wc.lpfnWndProc = UI_GetWndProc();  // Au lieu de WndProc personnalisé
- *   RegisterClassA(&wc);
- * 
- * Cette procédure gère automatiquement :
- *   - WM_SIZE: redimensionne l'éditeur
- *   - WM_DESTROY: nettoie les ressources
+ * @brief Initialise la barre d'outils.
  */
-WNDPROC UI_GetWndProc(void);
+void UI_InitToolbar(HWND hwndParent);
 
 /**
- * @brief Procédure fenêtre pour la fenêtre principale
- * 
- * @param hwnd Handle de la fenêtre
- * @param msg Identificateur du message
- * @param wp Paramètre wParam du message
- * @param lp Paramètre lParam du message
- * @return LRESULT Résultat du traitement du message
- * 
- * Gère automatiquement les messages liés à l'interface utilisateur.
- * Peut être utilisée directement dans RegisterClass().
+ * @brief Initialise le panneau des règles (barre latérale).
  */
-LRESULT CALLBACK UI_WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
+void UI_InitRulesPanel(HWND hwndParent);
+
+/**
+ * @brief Initialise la barre d'état.
+ */
+void UI_InitStatusbar(HWND hwndParent);
+
+/* ============================================================================
+ * Layout et thème
+ * ============================================================================ */
+
+/**
+ * @brief Repositionne tous les composants selon la taille de la fenêtre.
+ * @param hwndParent Handle de la fenêtre principale
+ */
+void UI_LayoutComponents(HWND hwndParent);
+
+/**
+ * @brief Applique un thème à l'interface.
+ * @param themeId 0 = thème clair, 1 = thème sombre
+ */
+void UI_ApplyTheme(int themeId);
+
+/* ============================================================================
+ * Boîtes de dialogue
+ * ============================================================================ */
+
+/**
+ * @brief Ouvre une boîte de dialogue pour ouvrir un fichier.
+ */
+void UI_DialogOpenFile(HWND hwndParent);
+
+/**
+ * @brief Ouvre une boîte de dialogue pour enregistrer un fichier.
+ */
+void UI_DialogSaveFile(HWND hwndParent);
+
+/* ============================================================================
+ * Procédure fenêtre (pour usage interne et dans main.c)
+ * ============================================================================ */
+
+/**
+ * @brief Procédure fenêtre principale de l'application.
+ */
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // UI_MANAGER_H
+#endif /* UI_MANAGER_H */
