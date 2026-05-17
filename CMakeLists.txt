@@ -58,7 +58,7 @@ add_executable(test_debug
 )
 target_link_libraries(test_debug hunspell-1.7)
 
-# Note : Les bibliothèques (Hunspell, Scintilla, cJSON) seront liées ici en Phase 2 [cite: 345, 346]
+# Note (dev-d) : Les bibliothèques (Hunspell, Scintilla, cJSON) seront liées ici en Phase 2 [cite: 345, 346]
 add_executable(test_cjson
     src/test_cjson.c
     lib/cJSON.c       # Fichier source de cJSON
